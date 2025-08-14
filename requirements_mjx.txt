@@ -1,0 +1,5 @@
+jax[cuda12]==0.5.3
+brax==0.12.4
+mujoco-mjx==3.3.1
+git+https://github.com/araffin/sbx@1e5e43356765587a89db3178cecc15bb56f49b02
+torch==2.7.1
