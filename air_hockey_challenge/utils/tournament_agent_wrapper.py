@@ -112,11 +112,11 @@ class RemoteTournamentAgentWrapper(TournamentAgentWrapper):
 
     @timeit
     def get_action_1(self, obs_1):
-        return np.frombuffer(self._get_from_socket(self.socket_1, "A", obs_1)).reshape(2, -1)
+        return np.frombuffer(self._get_from_socket(self.socket_1, "A", obs_1)).reshape(-1, 7)
 
     @timeit
     def get_action_2(self, obs_2):
-        return np.frombuffer(self._get_from_socket(self.socket_2, "A", obs_2)).reshape(2, -1)
+        return np.frombuffer(self._get_from_socket(self.socket_2, "A", obs_2)).reshape(-1, 7)
 
     def preprocessor_1(self, obs_1):
         return np.frombuffer(self._get_from_socket(self.socket_1, "P", obs_1))
@@ -166,8 +166,8 @@ class RemoteVsLocalTournamentAgentWrapper(TournamentAgentWrapper):
         
     @timeit
     def get_action_1(self, obs_1):
-        return np.frombuffer(self._get_from_socket(self.socket_1, "A", obs_1)).reshape(2, -1)
-    
+        return np.frombuffer(self._get_from_socket(self.socket_1, "A", obs_1)).reshape(-1, 7)
+
     @timeit
     def get_action_2(self, obs_2):
         return self.agent_2.draw_action(obs_2)
