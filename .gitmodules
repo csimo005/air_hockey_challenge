@@ -1,0 +1,3 @@
+[submodule "rust_agent"]
+	path = rust_agent
+	url = https://github.com/csimo005/Just4Fun.git
