@@ -32,7 +32,12 @@ ENV PYTHONPATH=/src/2025-challenge
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6 git && \
+RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6 git build-essential curl gfortran wget
+ARG CMAKE_VERSION=3.28.3
+RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.sh -O /tmp/cmake-install.sh && \
+    chmod +x /tmp/cmake-install.sh && \
+    /tmp/cmake-install.sh --skip-license --prefix=/usr/local && \
+    rm /tmp/cmake-install.sh && \
     rm -rf /var/cache/apt/* /var/lib/apt/lists/*
 
 RUN pip install -U pip  \
@@ -43,6 +48,11 @@ RUN pip install -U pip  \
     && rm -rf /wheels
 
 COPY . 2025-challenge/
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN python3 -m pip install maturin[patchelf]
+RUN cd 2025-challenge/rust_agent && rm -rf target && maturin build --release && python3 -m pip install target/wheels/rust_agent-*
 
 CMD ["python", "2025-challenge/run.py", "-e", "tournament"]
 
@@ -56,3 +66,4 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 # libgl1-mesa-glx libgl1-mesa-dri for non-nvidia GPU
 RUN apt-get update && apt-get -y install xauth tzdata libgl1-mesa-glx libgl1-mesa-dri && \
     rm -rf /var/cache/apt/* /var/lib/apt/lists/*
+
